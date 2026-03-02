@@ -1,17 +1,21 @@
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf";
-// Use jsdelivr CDN which works better with Vite
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js`;
+
+// Set worker source
+if (typeof window !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/legacy/build/pdf.worker.min.js`;
+}
 
 export async function extractTextFromPDF(file: File): Promise<string> {
   try {
     const arrayBuffer = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument({
+    
+    const loadingTask = pdfjsLib.getDocument({
       data: arrayBuffer,
-      useWorkerFetch: false,
-      isEvalSupported: false,
-      useSystemFonts: true
-    }).promise;
+      cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
+      cMapPacked: true,
+    });
 
+    const pdf = await loadingTask.promise;
     let fullText = '';
 
     for (let i = 1; i <= pdf.numPages; i++) {
@@ -27,6 +31,6 @@ export async function extractTextFromPDF(file: File): Promise<string> {
     return fullText.trim();
   } catch (error) {
     console.error('Error extracting text from PDF:', error);
-    throw new Error('Failed to parse PDF file');
+    throw new Error(`Failed to parse PDF file: ${error instanceof Error ? error.message : 'Unknown error'}`);
   }
 }
