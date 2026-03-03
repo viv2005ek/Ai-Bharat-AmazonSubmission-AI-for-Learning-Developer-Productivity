@@ -125,6 +125,22 @@ The key differentiator is contextual integration. While other tools require user
 
 **On-Device Inference**: Local processing for basic queries to improve privacy and reduce latency.
 
+## AWS Cloud Architecture (Planned Deployment)
+
+Thread.ai is architected for AWS-native, serverless deployment.
+
+### Planned AWS Integration
+
+- **Amazon API Gateway** — Secure request routing
+- **AWS Lambda** — Serverless AI orchestration
+- **Amazon Bedrock** — Foundation model reasoning layer
+- **Amazon S3** — Document and asset storage
+- **Amazon DynamoDB (Optional)** — Session and access control management
+
+The generative reasoning engine is abstracted, allowing seamless migration from Gemini (prototype implementation) to Amazon Bedrock without changes to frontend or retrieval components.
+
+This ensures scalability, security, and cost-efficient cloud deployment aligned with AWS best practices.
+
 ## Hackathon Alignment
 
 Thread.ai directly addresses the challenge to "build an AI-powered solution that helps people learn faster, work smarter, or become more productive while building or understanding technology."

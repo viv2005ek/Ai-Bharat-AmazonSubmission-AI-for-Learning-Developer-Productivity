@@ -13,6 +13,39 @@ Multimodal AI is essential because technical learning often involves visual elem
 
 ## System Architecture
 
+## AWS-Native Deployment Architecture (Cloud-Ready Design)
+
+Thread.ai follows a modular AI abstraction pattern that allows seamless migration of the generative reasoning layer to Amazon Bedrock without changing frontend or retrieval logic.
+
+### Proposed AWS Architecture Components
+
+- **Amazon API Gateway** — Secure routing layer for all incoming user requests
+- **AWS Lambda** — Serverless orchestration layer responsible for:
+  - Request validation
+  - Context aggregation
+  - RAG coordination
+  - LLM invocation
+- **Amazon Bedrock** — Foundation model access (Claude / Titan) for generative reasoning
+- **Amazon S3** — Scalable storage for uploaded documents and assets
+- **Amazon DynamoDB (Optional)** — Session metadata, access control, and conversation state tracking
+
+### AWS Deployment Flow
+
+1. User request sent to Amazon API Gateway  
+2. API Gateway triggers AWS Lambda function  
+3. Lambda:
+   - Retrieves relevant document chunks (RAG)
+   - Processes multimodal inputs (text / image metadata)
+   - Invokes Amazon Bedrock foundation model
+4. Response returned to frontend via API Gateway  
+
+This design ensures:
+
+- Serverless scalability  
+- Pay-per-use cost optimization  
+- Secure foundation model access  
+- Cloud-native extensibility for enterprise deployment  
+
 ### Frontend
 - React-based single-page application
 - Responsive design supporting desktop, tablet, and mobile
@@ -142,6 +175,14 @@ Generated response is validated against source materials and enhanced with citat
 Based on content complexity and user preference, response is delivered as text or routed to avatar generation system for video creation. All responses include source citations and follow-up suggestions to maintain learning momentum.
 
 ## Technology Choices & Rationale
+
+### AWS Cloud Readiness
+
+Thread.ai is architected with a pluggable LLM abstraction layer. This allows switching between Google Gemini (current prototype) and Amazon Bedrock (AWS-native deployment) without structural modifications.
+
+The stateless orchestration design enables seamless deployment on AWS Lambda, ensuring horizontal scalability and reduced infrastructure overhead.
+
+This approach avoids vendor lock-in and maintains cloud portability.
 
 ### Gemini
 Chosen for strong multimodal capabilities and cost-effective pricing. Provides excellent reasoning for technical content while supporting both text and image inputs in a single API call, reducing system complexity.
